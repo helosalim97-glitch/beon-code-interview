@@ -1,23 +1,31 @@
+
+import { Database } from './databases/database_abstract';
 import { MongoStrategy } from './databases/mongo/mongodb';
 import { PostgreStrategy } from './databases/postgres/postgres';
 
 export class DatabaseInstanceStrategy {
-    static _instance: MongoStrategy | PostgreStrategy;
+  private static _instance: Database;
 
-    static getInstance(): any {
-        return this._instance;
+  static getInstance(): Database {
+    if (!this._instance) {
+      throw new Error('Database has not been initialized');
     }
 
-    static async setInstanceByEnv(env: string) {
-        switch (env) {
-            case 'mongo':
-                this._instance = new MongoStrategy();
-                break;
-            case 'postgres':
-                this._instance = new PostgreStrategy();
-                break;
-            default:
-                throw new Error(`DB type ${env} is not supported`);
-        }
+    return this._instance;
+  }
+
+  static async setInstanceByEnv(env: string): Promise<void> {
+    switch (env) {
+      case 'mongo':
+        this._instance = new MongoStrategy();
+        break;
+
+      case 'postgres':
+        this._instance = new PostgreStrategy();
+        break;
+
+      default:
+        throw new Error(`DB type ${env} is not supported`);
     }
+  }
 }

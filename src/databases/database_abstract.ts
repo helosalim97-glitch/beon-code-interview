@@ -1,24 +1,32 @@
-export class Database {
-    public static _instance: any;
 
-    public static getInstance() {
-        // subclass must implement this method
-    }
+export interface Flight {
+  code: string;
+  origin: string;
+  destination: string;
+  status: string;
+}
 
-    public async getFlights() {
-        // subclass must implement this method
-    }
+export interface Passenger {
+  id: number;
+  name: string;
+  gender: string;
+  email: string;
+}
 
-    public async updateFlightStatus(code: string) {
-        // subclass must implement this method
-    }
+export interface FlightPassenger {
+  flightCode: string;
+  passengerId: number;
+}
 
-    public async addFlight(flight: {
-        code: string;
-        origin: string;
-        destination: string;
-        status: string;
-    }) {
-        // subclass must implement this method
-    }
+export abstract class Database {
+  abstract getFlights(): Promise<Flight[]>;
+
+  abstract updateFlightStatus(code: string): Promise<unknown>;
+
+  abstract addFlight(flight: Flight): Promise<unknown>;
+
+  abstract assignPassenger(
+    flightCode: string,
+    passengerId: number
+  ): Promise<FlightPassenger>;
 }
